@@ -1,4 +1,4 @@
-﻿levels = {
+levels = {
 "    #####n    #   #n    #$  #n  ###  $##n  #  $ $ #n### # ## #   ######n#   # ## #####  ..#n# $  $          ..#n##### ### #@##  ..#n    #     #########n    #######",
 "############n#..  #     ###n#..  # $  $  #n#..  #$####  #n#..    @ ##  #n#..  # #  $ ##n###### ##$ $ #n  # $  $ $ $ #n  #    #     #n  ############",
 "        ########n        #     @#n        # $#$ ##n        # $  $#n        ##$ $ #n######### $ # ###n#....  ## $  $  #n##...    $  $   #n#....  ##########n########",
@@ -73,10 +73,10 @@ boxesrequired = 0
 px = 0
 py = 0
 function set_tile(x,y,c)
-  emu.write(0x2000+(y*32+x),c,emu.memType.ppu)
+  emu.write(y*32+x,c,emu.memType.nesNametableRam)
 end
 function get_tile(x,y)
-  return emu.read(0x2000+(y*32+x),emu.memType.ppu)
+  return emu.read(y*32+x,emu.memType.nesNametableRam)
 end
 function clear_screen()
   for y=0,29 do
@@ -180,7 +180,7 @@ function moveplayer(ox,oy)
 end
 function resetdemo()
   -- Ensure the game will never enter demo mode
-  emu.write(0x07a2,0xff,emu.memType.cpu)
+  emu.write(0x07a2,0xff,emu.memType.nesInternalRam)
 end
 function handle()
   if (timer%9 == 0) then
