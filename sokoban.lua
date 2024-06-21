@@ -81,11 +81,12 @@ boxesin = 0
 boxesrequired = 0
 px = 0
 py = 0
+input_stop = 1
 function set_tile(x,y,c)
-  emu.write(0x2000+(y*32+x),c,emu.memType.ppu)
+  emu.write(0x2000+(y*32+x),c,emu.memType.nesPpuMemory)
 end
 function get_tile(x,y)
-  return emu.read(0x2000+(y*32+x),emu.memType.ppu)
+  return emu.read(0x2000+(y*32+x),emu.memType.nesPpuMemory)
 end
 function clear_screen()
   for y=0,29 do
@@ -189,7 +190,7 @@ function moveplayer(ox,oy)
 end
 function resetdemo()
   -- Ensure the game will never enter demo mode
-  emu.write(0x07a2,0xff,emu.memType.cpu)
+  emu.write(0x07a2,0xff,emu.memType.nesMemory)
 end
 function handle()
   if (timer%9 == 0) then
@@ -224,17 +225,18 @@ function main()
 end
 -- Copy marios head
 for i=0,16 do
-  d = emu.read(0x0330+i,emu.memType.ppuDebug)
-  emu.write(0x1330+i,d,emu.memType.ppuDebug)
+  d = emu.read(0x0330+i,emu.memType.nesPpuMemory)
+  emu.write(0x1330+i,d,emu.memType.nesPpuMemory)
 end
 for i=0,0x3ff do
-  emu.write(0x2000+i,0x55,emu.memType.ppuDebug)
+  emu.write(0x2000+i,0x55,emu.memType.nesPpuMemory)
 end
 emu.addEventCallback(main,emu.eventType.startFrame)
-emu.write(0x2001,0x1e,emu.memType.cpu)
-emu.write(0x3f00,math.random(255),emu.memType.ppuDebug)
-emu.write(0x3f05,math.random(255),emu.memType.ppuDebug)
+--emu.addEventCallback(handle,emu.eventType.inputPolled)
+emu.write(0x2001,0x1e,emu.memType.nesMemory)
+emu.write(0x3f00,math.random(255),emu.memType.nesPpuMemory)
+emu.write(0x3f05,math.random(255),emu.memType.nesPpuMemory)
 for i,v in ipairs(ppudata) do
-  emu.write(i-1,v,emu.memType.ppuDebug)
+  emu.write(i-1,v,emu.memType.nesPpuMemory)
 end
 loadlevel(level)
